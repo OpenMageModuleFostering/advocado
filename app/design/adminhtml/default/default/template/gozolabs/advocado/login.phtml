@@ -1,0 +1,121 @@
+<?php
+    /** Login template for Advocado 
+     *  
+     *  @author syquek
+     */
+
+    /* @var $this GozoLabs_Advocado_Block_Adminhtml_Login 
+     * @see GozoLabs_Advocado_Block_Adminhtml_Login
+     */
+?>
+<?php
+    echo $this->analyticsScript();
+?>
+
+<form id="advoc-vars">
+    <input type="hidden" id="advoc-signup-url" value="<?php echo $this->getSignupUrl(); ?>" />
+    <input type="hidden" id="advoc-magento-auth-url" value="<?php echo $this->advocMagentoLoginUrl(); ?>" />
+    <input type="hidden" id="advoc-dashboard-login-url" value="<?php echo $this->advocadoDashboardLoginUrl(); ?>" />
+    <input type="hidden" id="advoc-magento-register-url" value="<?php echo $this->advocMagentoRegisterURl(); ?>" />
+</form>
+<div id="advoc-register-container" style="" class="page-state <?php if ($this->isStoreConnected()) { echo 'hide'; } ?>">
+    <div class="status-container">
+        <div class="welcome-msg">
+            <div class="connect-status clearfix">
+                <span>Your store is <strong>not connected</strong> to the Advocado service. <br />You will need to create a new account or login to your existing account to connect it.</span><br /><br />
+                <ul class="no-bullet small-text flat"><li>&raquo;&nbsp;<a href="http://getadvocado.com" target="_blank">Find out more about Advocado</a></li><li>&raquo;&nbsp;<a href="mailto:dax@getadvocado.com" target="_blank">Need help?</a> (Mail us at dax@getadvocado.com)</li></ul>
+            </div>
+        </div>
+    </div>
+    <div class="advoc-errors hide"></div>
+    <div class="center-form">
+        <div class="advocado-logo"></div>
+        <div class="offset-top">Enter your email address and password to your new account with Advocado.</div>
+        <form method="post" action="<?php  echo '#';//$this->processLoginUrl(); ?>" id="advoc-registration-form">
+            <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+            <label for="advoc-username">Email</label>
+            <input id="advoc-username" name="username" type="text" value="<?php echo $this->getAdminEmail(); ?>" />
+            <label for="advoc-password">Password</label>
+            <input id="advoc-password" type="password" name="password" />
+            <div class="hide">
+                <label for="advoc-website-store-group">Website/Store</label> 
+                <select id="advoc-website-store-group" name="advoc-website-store-group" class="advoc-website-store-group hide">
+                    <?php
+                        $wsg = $this->websiteStoreGroups();
+                        foreach ($this->websiteStoreGroups() as $wg) { 
+                            $optionVal = implode( '_', array( $wg['websiteId'], $wg['storeGroupId'] ));
+                            $optionPrint = implode( '/', array( $wg['websiteName'], $wg['storeGroupName'] ));
+                            echo '<option value="'.$optionVal.'">'.$optionPrint.'</option>';
+                        }
+                    ?>
+                </select> 
+            </div>
+            <input type="hidden" id="advoc-site-name" name="site_name" value="<?php echo $this->getSiteName(); ?>" />
+            <input type="hidden" id="advoc-site-url" name="site_url" value="<?php echo $this->getSiteUrl(); ?>" />
+            <input type="hidden" id="advoc-currency-code" name="default_currency_code" value="<?php echo $this->getCurrencyCode(); ?>" />
+            <input type="hidden" id="advoc-site-platform" name="platform" value="Magento" />
+            <input type="submit" value="Create An Account" />
+            <ul id="advoc-login-options">
+                <li>Already have an account? <a href="#" onclick="javascript:window.advocado.loginState();return false;">Log in here.</a></li>
+            </ul>
+        </form>
+    </div>
+</div>
+<div id="advoc-login-container" class="page-state <?php if (!$this->isStoreConnected()) { echo 'hide'; } ?>">
+    <div class="status-container">
+        <div class="welcome-msg">
+            <div class="connect-status">
+                <?php 
+                    // store should already be connected (i.e. credentials stored in the database)
+                    //echo '<span>Your store is <strong>connected</strong> to the Advocado service.</span><br /><span>Log in below to access your Advocado account.</span>';
+                ?>
+                <span>Your store is <strong>connected</strong> to the Advocado service.</span><br /><span>Log in to your Advocado account below to manage your campaigns. <br /></span>
+                <ul class="no-bullet small-text flat offset-top">
+                    <li>&raquo; &nbsp;<a href="http://getadvocado.com" target="_blank">Find out more about Advocado</a></li>
+                    <li>&raquo; &nbsp;<a target="_blank" href="<?php echo $this->advocadoDashboardUrl(); ?>">Pop out the dashboard</a></li>
+                    <li>&raquo; &nbsp;<a target="_blank" href="mailto:dax@getadvocado.com">Need help?</a> Mail us at dax@getadvocado.com</li>
+                </ul>
+            </div>
+            <p class="status-message">
+            </p>
+        </div>
+    </div>
+    <div class="advoc-errors hide"></div>
+    <div class="center-form">
+        <div class="advocado-logo"></div>
+        <form method="post" action="<?php  echo '#';//$this->processLoginUrl(); ?>" id="advoc-login-form">
+            <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+            <label for="advoc-username">Username</label>
+            <input id="advoc-username" name="username" type="text" />
+            <label for="advoc-password">Password</label>
+            <input id="advoc-password" name="password" type="password" />
+            <div class="hide">
+                <label for="advoc-website-store-group">Website/Store</label> 
+                <select id="advoc-website-store-group" class="advoc-website-store-group" name="advoc-website-store-group">
+                    <?php
+                        $wsg = $this->websiteStoreGroups();
+                        foreach ($this->websiteStoreGroups() as $wg) { 
+                            $optionVal = implode( '_', array( $wg['websiteId'], $wg['storeGroupId'] ));
+                            $optionPrint = implode( '/', array( $wg['websiteName'], $wg['storeGroupName'] ));
+                            echo '<option value="'.$optionVal.'">'.$optionPrint.'</option>';
+                        }
+                    ?>
+                </select>
+            </div>
+            <input type="submit" value="Login" />
+            <ul id="advoc-login-options">
+            <li><a target="_blank" href="<?php echo $this->advocadoPasswordResetUrl(); ?>">Forgot your password?</a></li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+<div id="advoc-dashboard-container-login">
+</div>
+<div id="advoc-dashboard-container-dash" style="display:none">
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<!-- <script src="//advocado-frontend-dev.s3.amazonaws.com/js/lib/easyXDM.debug.js"></script> -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/easyXDM/2.4.17.1/easyXDM.min.js"></script> 
+
+
