@@ -1,0 +1,88 @@
+
+
+#advoc-login-container { 
+    display: block;
+}
+
+#advoc-login-container #status-container { 
+    border: 1px solid rgb(109, 163, 88);
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    background-color: rgb(229, 243, 229);
+    font-size: 16px;
+}
+
+#advoc-login-container .center-form { 
+    width: 350px;
+    display: block;
+    padding: 24px 24px;
+    border: 1px solid rgb(223, 223, 223);
+    font-size: 18px;
+    margin: 23px auto;
+    color: rgb(133, 133, 133);
+}
+
+#advoc-login-container .center-form .advocado-logo { 
+    width: 183px;
+    height: 50px;
+    background-image: url(http://getadvocado.com/img/global/logo.png);
+    background-repeat: no-repeat;
+    margin: 0 auto; 
+    padding: 0;
+}
+
+#advoc-login-container .center-form label { 
+    color: rgb(133, 133, 133);
+    display: block;
+    margin-top: 8px;
+}
+
+#advoc-login-form { 
+    display: block;
+    padding: 24px 24px;
+    font-size: 18px;
+    margin: 23px auto;
+}
+
+#advoc-login-form input[type=text],
+#advoc-login-form input[type=password] { 
+
+    height: 22px;
+    font-size: 18px;
+    width: 300px;
+    margin: 4px 0px;
+
+}
+
+#advoc-login-form input[type=submit] { 
+    display: block;
+    margin-top: 8px;
+    width: 80px;
+    height: 40px;
+    background-color: rgb(67, 182, 67);
+    font-size: 18px;
+    color: white;
+}
+
+select#advoc-website-store-group { 
+    font-size: 18px;
+    margin: 4px 0px;
+}
+
+#advoc-login-options { 
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+#status-container .connect-status { 
+    text-align: center;
+    color: orange;
+}
+
+#status-container .status-message { 
+    text-align: center;
+}
+
+

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<GozoLabs_Advocado>
+			<active>true</active>
+			<codePool>community</codePool>
+		</GozoLabs_Advocado>
+	</modules>
+</config>

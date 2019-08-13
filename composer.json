@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Advocado",
+    "type": "magento-module",
+    "license": "MITL",
+    "homepage": "",
+    "description": "Drive more sales to your store through your customers’ social networks. Sign up for a free trial now!",
+    "authors": [
+    {
+        "name": "SY Quek",
+        "email": "quek@getadvocado.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

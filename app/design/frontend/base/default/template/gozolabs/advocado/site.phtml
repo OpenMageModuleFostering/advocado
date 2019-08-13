@@ -1,0 +1,43 @@
+<?php
+/* Site variables */
+
+/* @var $this GozoLabs_Advocado_Block_Site
+ * @see GozoLabs_Advocado_Block_Site
+ */
+?>
+<form id="advoc-site-vars">
+    <!-- variables for advocado's use -->
+    <input id="advoc-site-key" name="advoc-site-key" type="hidden" value="<?php echo $this->siteKey(); ?>"/>
+    <?php
+        $session = Mage::getSingleton('checkout/session');
+        if ( $session ) { 
+            $orderId = $session->getLastOrderId();
+            echo '<input id="advoc-order-id" name="advoc-order-id" type="hidden" value="' . $orderId. '" />';
+        } else { 
+            Mage::log( 'no session' );
+        }
+
+    ?>
+    <div class="no-display">
+<?php
+        $vMap = $this->productVariantsMap();
+        foreach( $vMap as $variantAttribs) { 
+            $attStrs = array();
+            foreach( $variantAttribs as $variantId => $vOptions ) { 
+                Mage::log('vOptions => ' . var_export($vOptions, true));
+                $vString = '';
+                foreach($vOptions as $optId => $optValIndex) { 
+                    Mage::log('optId = ' . var_export($optId, true) . ', optValIndex = ' . var_export($optValIndex, true));
+                    if ( strlen($vString) > 0) { 
+                        $vString .= '__';
+                    }
+                    $vString .= $optId . '_' . $optValIndex; 
+                }
+                echo '<input class="advoc-variant-attribs" id="'.$vString.'" name="'.$vString.'" type="hidden" value="'.$variantId.'" />';
+            }
+        }
+
+?>
+    </div>
+</form>
+
