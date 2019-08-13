@@ -1,6 +1,7 @@
-if(jQuery) { 
-    jQuery.noConflict();
-}
+
+// give $ back
+var jQuery_A = jQuery.noConflict();
+
 var advocado = (function($, A) { 
 
     var POPUP_TITLE = 'Create a new Advocado account',
@@ -239,7 +240,7 @@ var advocado = (function($, A) {
             );
         })
         .fail(function(xhr, txtStatus, errThrown) {
-            if (xhr.statusCode == 403) { 
+            if (xhr.status === 403) { 
                 displayError('register', 'An account with this email address already exists. Please log in');
             } else { 
                 displayError('register', 'There was an error signing up. You might have used an invalid email address.');
@@ -298,9 +299,9 @@ var advocado = (function($, A) {
 
     return A;
 
-})(jQuery, advocado || {});
+})(jQuery_A, advocado || {});
 
-jQuery(document).ready(function() {
+jQuery_A(document).ready(function() {
     advocado.createAccountEvents();
     advocado.loginFormEvents();
 });

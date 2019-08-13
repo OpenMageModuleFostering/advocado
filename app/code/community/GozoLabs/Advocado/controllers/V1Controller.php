@@ -250,6 +250,7 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
 
     public function productsAction() { 
 
+        Mage::log('Getting products');
         $id = $this->getRequest()->getParam('id');
         $response = $this->getJsonResponse();
 

@@ -1108,8 +1108,9 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
     const SHARE_CODES_SHARES                = 'shares';
     const ADVOCADO_CATEGORY_NAME            = 'Advocado Products';
 
-    function getWebsite($websiteId) { 
-        $sites = Mage::app()->getWebsites();
+    function getWebsite($websiteId=1) { 
+        $withDefault = ($websiteId == 0) ? true : false;
+        $sites = Mage::app()->getWebsites($withDefault);
         foreach( $sites as $s ) { 
             if ($s->getId() == $websiteId) { 
                 return $s;
@@ -1260,7 +1261,9 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
         if ( !$id ) { 
 
             $_collect = Mage::getResourceModel('catalog/product_collection')
-                ->setStoreId(Mage::app()->getStore()->getStoreId());
+                ->setStoreId($this->getWebsite()->getDefaultStore()->getStoreId());
+            // lazy collection, needs to load stuff, so we call count
+            // this is really weird.
 
             // version 1 of the join - doesn't work
             //$_collect->getSelect()
@@ -1289,6 +1292,7 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                     //)
                 //)
             //);
+            //Mage::log('Number of products = ' . $_collect->count());
             $collect = new AdvocCustomProductCollection($_collect);
 
             if (is_array( $filters ) && count( $filters ) > 0 ) {
@@ -1558,3 +1562,12 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
 }
 
 ?>
+<?php
+
+/*
+ * ==================================================
+ * Utilities
+ * ==================================================
+ */
+
+
