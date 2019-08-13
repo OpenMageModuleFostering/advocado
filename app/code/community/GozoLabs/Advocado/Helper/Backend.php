@@ -8,6 +8,7 @@ if ( isset( $_SERVER[ 'ADVOC_LOCAL_DEBUG' ] ) ) {
     define( 'ADVOCADO_BACKEND_HOST', 'http://api.advoca.do' );
 }
 
+
 /** Convenience function for setting multiple parameters 
  *  for a Varien_Http_Client
  *  @param Varien_Http_Client $client

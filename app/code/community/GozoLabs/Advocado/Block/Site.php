@@ -51,7 +51,7 @@ class GozoLabs_Advocado_Block_Site extends
 
             $helper = Mage::helper('gozolabs_advocado');
             $wrappedProduct = $helper->getProducts($product->getId());
-            $variants = $wrappedProduct->getVariants($product);
+            $variants = $wrappedProduct->getVariants();
             $attribs = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
 
             Mage::log('in product variants map');

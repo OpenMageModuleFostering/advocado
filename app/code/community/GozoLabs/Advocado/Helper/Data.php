@@ -510,6 +510,34 @@ class AdvocPVariant extends AdvocModelInstance {
         return intval( $stock );
     }
 
+    protected function getManageInventory( $product ) { 
+        $stockItem = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
+        //$stockItem = $o->getStockItem();
+        $manageInventory = 'magento';
+        Mage::log('Getting inventory management details');
+        if ($stockItem && $stockItem->getId()) {
+            $useConfig = $stockItem->getData('use_config_manage_stock');
+            if ($useConfig)  {
+                Mage::log('Uses config = ' . $useConfig);
+                $config = Mage::getStoreConfig('cataloginventory/item_options/manage_stock');
+                if ($config != '1') { 
+                    $manageInventory = null;
+                } else { 
+                    Mage::log('Config says manage stock');
+                }
+            } else { 
+                Mage::log('Doesnt use config');
+                $stockItemManageInventory = $stockItem->getData('manage_stock');
+                if ($stockItemManageInventory == 0) { 
+                    $manageInventory = null;
+                }
+            }
+            //Mage::log('Stock item has id = ' . $stockItem->getId() . ', managing stock = ' . $stockItemManageInventory);
+            //Mage::log('v2 = ' . $stockItem->getData('use_config_notify_stock_qty'));
+        }
+        return $manageInventory;
+    }
+
     public function getData( $field = null ) { 
 
         $o = $this->origObject;
@@ -519,6 +547,26 @@ class AdvocPVariant extends AdvocModelInstance {
             ->getSymbol();
         $currencyCode = Mage::app()->getStore()
             ->getCurrentCurrencyCode();
+
+        // config value
+        //$config = Mage::getStoreConfig('cataloginventory/item_options/manage_stock');
+        //Mage::log('config = ' . var_export($config, true));
+        //// return if manages inventory
+        //$stockData = $o->getStockData();
+        //Mage::log('Stock Data = ' . var_export($stockData, true));
+        //$stockItem = Mage::getModel('cataloginventory/stock_item')->loadByProduct($o);
+        ////$stockItem = $o->getStockItem();
+        //$manageInventory = 'magento';
+        //Mage::log('Getting inventory management details');
+        //if (!$stockItem->getId()) { 
+            //$stockItemManageInventory = $stockItem->getData('manage_stock');
+            //Mage::log('Manages stock = ' . $stockItemManageInventory);
+            //Mage::log('v2 = ' . $stockItem->getData('use_config_notify_stock_qty'));
+        //} else { 
+            //$stockItemManageInventory = $stockItem->getData('manage_stock');
+            //Mage::log('Stock item has id = ' . $stockItem->getId() . ', managing stock = ' . $stockItemManageInventory);
+            //Mage::log('v2 = ' . $stockItem->getData('use_config_notify_stock_qty'));
+        //}
 
         return array_merge( $data,  
             array(
@@ -530,6 +578,7 @@ class AdvocPVariant extends AdvocModelInstance {
                 //'currency_symbol' => $currencySymbol,
                 //'currency_code' => $currencyCode,
                 'sku' => $o->getSku(),
+                'inventory_management' => $this->getManageInventory($o),
                 'inventory_quantity' => $this->getStockQty( $o )
             ) );
     }
@@ -1264,6 +1313,7 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                 ->setStoreId($this->getWebsite()->getDefaultStore()->getStoreId());
             // lazy collection, needs to load stuff, so we call count
             // this is really weird.
+            Mage::log('Number of products = ' . $_collect->count());
 
             // version 1 of the join - doesn't work
             //$_collect->getSelect()
@@ -1292,7 +1342,6 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                     //)
                 //)
             //);
-            //Mage::log('Number of products = ' . $_collect->count());
             $collect = new AdvocCustomProductCollection($_collect);
 
             if (is_array( $filters ) && count( $filters ) > 0 ) {
@@ -1562,12 +1611,3 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
 }
 
 ?>
-<?php
-
-/*
- * ==================================================
- * Utilities
- * ==================================================
- */
-
-
