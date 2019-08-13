@@ -126,7 +126,6 @@ class GozoLabs_Advocado_Block_Adminhtml_Login extends
      * - storeGroupName
      */
     public function websiteStoreGroups() { 
-        Mage::log('trying to find the errors');
         $websites = Mage::getModel('core/website')
             ->getCollection();
 

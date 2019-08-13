@@ -74,6 +74,10 @@ class AdvocPCoupon extends AdvocModelInstance {
         ) ) ? true : false;
     }
 
+    public function getRule() { 
+        return $this->origObject;
+    }
+
     public function getData( $field=null ) { 
 
         if ($field) { 
@@ -1102,6 +1106,7 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
     const SHARE_CODES_PARENT_SUB            = 'parent_sub_id';
     const SHARE_CODES_ST_CODE               = 'st_code';
     const SHARE_CODES_SHARES                = 'shares';
+    const ADVOCADO_CATEGORY_NAME            = 'Advocado Products';
 
     function getWebsite($websiteId) { 
         $sites = Mage::app()->getWebsites();
@@ -1145,6 +1150,56 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
 
     function isConfigurableProduct( $product ) { 
         return $product->isConfigurable();
+    }
+
+    /* ------------------------------------------------------------------------
+     * For Advocado Magento v1.1.0
+     * -----------------------------------------------------------------------*/
+
+    /* Advocado works with a special category so that application of coupons
+     * only takes place on these items.
+     */
+    function createAdvocadoCategory() { 
+        $cat = new Mage_Catalog_Model_Category();
+        $cat->setName(self::ADVOCADO_CATEGORY_NAME);
+        $cat->setUrlKey('advocado-discount');
+        $cat->setIsActive(1);
+        $cat->setIncludeInMenu(0);
+        $cat->setDisplayMode('PRODUCTS');
+        $cat->setIsAnchor(0);
+        // we use the root catalog, so the parent ID is 0
+        $parentCategory = Mage::getModel('catalog/category')
+            ->load(
+                Mage::app()->getWebsite(1)
+                ->getDefaultStore()
+                ->getRootCategoryId()
+            );
+        Mage::log('parent category id = ' . $parentCategory->getId());
+        $cat->setPath($parentCategory->getPath());
+        $cat->save();
+        return $cat;
+    }
+
+    function getAdvocadoCategory() {
+
+        $all = Mage::getModel('catalog/category')->getCollection()
+            ->addAttributeToSelect('name')
+            ->addAttributeToSelect('is_active');
+
+        $advocCat = null;
+
+        foreach($all as $_cat) { 
+            if ($_cat->getName() == self::ADVOCADO_CATEGORY_NAME) { 
+                // For other purposes
+                $advocCat = $_cat;
+                break;
+            }
+        }
+        if ($advocCat == null) { 
+            Mage::log('Creating advocado category');
+            $advocCat = $this->createAdvocadoCategory();
+        }
+        return $advocCat;
     }
 
     /** 
@@ -1308,6 +1363,38 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
         return $websiteIds;
     }
 
+    /**
+     * Will attach a condition to coupon. In this case we want to 
+     * focus only on applying this coupon on a specific category.
+     * @return $coupon (which was passed in as a parameter)
+     */
+    function exclusiveToAdvocadoProducts($coupon) { 
+        $cat = $this->getAdvocadoCategory();
+        // to understand what this means, i recommend this blogpost
+        // http://mikebywaters.wordpress.com/2011/12/18/programmatically-create-shopping-cart-price-rules-with-conditions-and-actions/
+        $actions = array(
+            '1'         => array(
+                'type'          => 'salesrule/rule_condition_product',
+                'aggregator'    => 'all',
+                'value'         => '1',
+                'new_child'     => false
+            ),
+
+            '1--1'      => array(
+                'type'                  => 'salesrule/rule_condition_product',
+                'attribute'             => 'category_ids',
+                'operator'              => '==',
+                'value'                 => $cat->getId(),
+                'is_value_processed'    => false
+            )
+        );
+        $rule = $coupon->getRule();
+        $rule->setData('actions', $actions);
+        $rule->loadPost($rule->getData());
+        $rule->save();
+        return $coupon;
+    }
+
     function createCartCoupon( $code, $amt, $toDate, $type='amt',
         $websiteIds=null ) { 
 
@@ -1345,7 +1432,6 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                 ->setIsActive(1)
                 ->setConditionsSerialized('')
                 ->setActionsSerialized('')
-                ->setConditionsSerialized('')
                 ->setCustomerGroupIds($this->_getAllCustomerGroups())
                 ->setStopRulesProcessing(0)
                 ->setIsAdvanced(1)

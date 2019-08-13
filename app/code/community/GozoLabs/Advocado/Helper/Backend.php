@@ -91,10 +91,22 @@ class GozoLabs_Advocado_Helper_Backend extends Mage_Core_Helper_Abstract {
     const TEMP_WEBSITE_ID           = 1;
     const TEMP_STORE_GROUP_ID       = 1;
 
+    private $analyticsHelper;
+
+    private function getAnalytics()  {
+        if (!isset($this->analyticsHelper) || !$this->analyticsHelper) { 
+            $this->analyticsHelper = Mage::helper('gozolabs_advocado/analytics');
+        }
+        return $this->analyticsHelper;
+    }
 
     public function isStoreConnected() { 
         $sc = $this->storeCredentials();
         if ($sc) { 
+            $this->getAnalytics()->track(
+                'Connected Store Viewing Dashboard', 
+                array()
+            );
             return true; 
         } 
         return false;
@@ -731,6 +743,10 @@ class GozoLabs_Advocado_Helper_Backend extends Mage_Core_Helper_Abstract {
                 strval($rp->getStatus()) .
                 ')' .
                 $rp->getMessage());
+            $log = Mage::helper('gozolabs_advocado/analytics');
+            $log->track('Backend Error', array(
+                'Status' => 'Cannot invalidate coupon (Backend Coupon ID=' . $couponId . ')',
+            ));
         }
 
     }

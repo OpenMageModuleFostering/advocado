@@ -200,6 +200,7 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
      * authentication with store credentials.
      */
     public function ordersAction()  {
+
         $req = $this->getRequest();
         $siteKey = $req->getParam('site_key');
         $siteToken = $req->getParam('site_token');
@@ -292,6 +293,7 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
 
     }
 
+
     private function _parseRawUrlEncodedBody( $request ) { 
         $raw = $request->getRawBody();
         $pairs = explode( '&', $raw );
@@ -336,6 +338,39 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
         return $request->getParam('action');
     }
 
+    private function applyCouponCode($couponCode, $notice='') { 
+
+        if ($notice == '') { 
+            $notice = $this->__('Congratulations! You have been given a discount!');
+        }
+
+        if ($couponCode != '') { 
+            Mage::getSingleton('checkout/session')->setData('coupon_code', $couponCode);
+            $cart = Mage::getSingleton('checkout/cart')
+                ->getQuote()
+                ->setCouponCode($couponCode)
+                ->collectTotals()
+                ->save();
+
+            // a success message to congratulate them
+            Mage::getSingleton('core/session')->addSuccess($notice);
+            return $cart;
+            
+        } else { 
+            Mage::getSingleton('checkout/session')->setData('coupon_code', '');
+            $cart = Mage::getSingleton('checkout/cart');
+            $items = Mage::getSingleton('checkout/session')
+                ->getQuote()
+                ->getItemsCollection();
+
+            foreach($items as $item) {
+                $cart->removeItem( $item->getId() );
+            }
+            $cart->save();
+            return null;
+        }
+    }
+
     /**
      *
      * Handles request related to coupons.
@@ -367,6 +402,13 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
                     $req->getParam('to_date'),
                     $req->getParam('type'),
                     $this->_getAdvocadoWebsiteIds());
+
+                // find out if it's a special advocado
+                // coupon, only applicable to advocado
+                // products. If it is, lets make it so
+                if ($req->getParam('advocado_type') == 'instant_discount') { 
+                    $helper->exclusiveToAdvocadoProducts($result);
+                }
 
                 $this->getJsonResponse()
                     ->setHttpResponseCode(201)
@@ -439,6 +481,23 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
                                 'error_msg' => 'Bad request.' 
                             )));
 
+            }
+        } else if ($action == 'apply') { 
+
+            // no need for authentication
+            $cart = $this->applyCouponCode($req->getParam('coupon_code'));
+            if ($cart == null) { 
+                $response = $this->getJsonResponse()
+                    ->setHttpResponseCode(403)
+                    ->appendBody(
+                        $this->jsonify(
+                            array('error_code'=>403,
+                                'error_msg' => 'Forbidden. Invalid.'
+                            ))
+                        );
+            } else { 
+                $response = $this->getJsonResponse()
+                    ->setHttpResponseCode(200);
             }
         } else { 
             $this->getJsonResponse()

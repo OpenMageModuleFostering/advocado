@@ -47,14 +47,20 @@
                     <!--</gozolabs_advocado>-->
                 <!--</observers>-->
             <!--</sales_quote_add_item>-->
-            <sales_quote_item_set_product>
-                <observers>
-                    <gozolabs_advocado>
-                        <class>gozolabs_advocado/observer</class>
-                        <method>addItemToCart</method>
-                    </gozolabs_advocado>
-                </observers>
-            </sales_quote_item_set_product>
+            <!-- the below observer was in version 1.1
+                 however because there is no longer a 
+                 need to verify the share (just apply 
+                 the coupon code),
+                 no point setting the discount
+                 -->
+            <!--<sales_quote_item_set_product>-->
+                <!--<observers>-->
+                    <!--<gozolabs_advocado>-->
+                        <!--<class>gozolabs_advocado/observer</class>-->
+                        <!--<method>addItemToCart</method>-->
+                    <!--</gozolabs_advocado>-->
+                <!--</observers>-->
+            <!--</sales_quote_item_set_product>-->
             <checkout_submit_all_after>
                 <observers>
                     <gozolabs_advocado>

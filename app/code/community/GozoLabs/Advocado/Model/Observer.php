@@ -168,8 +168,11 @@ class GozoLabs_Advocado_Model_Observer {
                         // delete
                         $coupon->delete();
                     } else { 
-                        Mage::log('backend failed to update coupon with ' .
-                            'code = ' . $couponCode );
+                        Mage::log('backend failed to update coupon with ' . 'code = ' . $couponCode );
+                        $log = Mage::helper('gozolabs_advocado/analytics');
+                        $log->track('Backend Error', array( 
+                            'Status' => 'Did not delete coupon with code=' . $couponCode
+                        ));
                     }
                 } else { 
                 // we would normally delete
