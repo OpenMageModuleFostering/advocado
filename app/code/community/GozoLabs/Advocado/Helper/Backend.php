@@ -8,7 +8,6 @@ if ( isset( $_SERVER[ 'ADVOC_LOCAL_DEBUG' ] ) ) {
     define( 'ADVOCADO_BACKEND_HOST', 'http://api.advoca.do' );
 }
 
-
 /** Convenience function for setting multiple parameters 
  *  for a Varien_Http_Client
  *  @param Varien_Http_Client $client
@@ -83,7 +82,8 @@ class GozoLabs_Advocado_Helper_Backend extends Mage_Core_Helper_Abstract {
     const URL_SHARES                = '/v1/shares';
     const URL_COUPONS               = '/v1/dynamic_codes';
     const URL_SUBSCRIPTIONS         = '/v1/subscriptions';
-    const DASHBOARD_URL_PATH        = '/admin_pages/?page=dashboard';
+    const ADMIN_SIGNUP_URL          = '/actors/app_admin/create/';
+    const DASHBOARD_URL_PATH        = '/admin_pages/dashboard';
     const DASHBOARD_LOGIN_URL       = '/admin_pages/login/';
     const PASSWORD_RESET_URL        = '/admin_pages/user/password/reset/';
     const COOKIE_STCODES            = 'advoc.stCodes';
@@ -102,6 +102,10 @@ class GozoLabs_Advocado_Helper_Backend extends Mage_Core_Helper_Abstract {
 
     public function passwordResetUrl() {
         return ADVOCADO_BACKEND_HOST . self::PASSWORD_RESET_URL;
+    }
+
+    public function merchantSignupUrl() { 
+        return ADVOCADO_BACKEND_HOST . self::ADMIN_SIGNUP_URL;
     }
 
     /** URL for accessing the dashboard */
@@ -270,6 +274,35 @@ class GozoLabs_Advocado_Helper_Backend extends Mage_Core_Helper_Abstract {
         } 
         catch (Exception $e) { 
             Mage::log( 'request error: ' . $e->getMessage() );
+        }
+        return false;
+    }
+
+    public function register($username, $password) { 
+
+        $dataHelper = Mage::helper('gozolabs_advocado');
+        $url = _urlCompose(ADVOCADO_BACKEND_HOST, self::ADMIN_SIGNUP_URL);
+        Mage::log('Registration url: ' . $url);
+        $client = _httpClient(
+            $url,
+            Varien_Http_Client::POST,
+            array(
+                'email' => $username,
+                'password' => $password,
+                'site_name' => $dataHelper->getSiteName(),
+                'site_url' => $dataHelper->getSiteUrl(),
+                'platform' => 'Magento',
+                'default_currency_code' => $dataHelper->getCurrencyCode()
+            ));
+
+        $response = $client->request();
+        if ($response->isSuccessful()) { 
+            // return the username and pasword    
+            $data = Mage::helper('core')->jsonDecode( $response->getRawBody() );
+            return array('code'=>$response->getStatus(), 'data'=>$data);
+        } else {
+            Mage::log(' Error: ' . $response->getStatus() . ' -> ' . $response->getMessage());
+            return array('code'=>$response->getStatus(), 'data'=>$response->getMessage());
         }
         return false;
     }

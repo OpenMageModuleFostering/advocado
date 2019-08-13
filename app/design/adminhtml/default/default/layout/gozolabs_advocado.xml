@@ -2,7 +2,10 @@
 <layout version="0.1.0">
     <adminhtml_advocado_index>
         <reference name="head">
+            <action method="addCss"><stylesheet>css/animate.min.css</stylesheet></action>
             <action method="addCss"><stylesheet>css/gozolabs_advocado.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/gozolabs_advocado/jquery.min.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/gozolabs_advocado/gozolabs_advocado.js</name></action>
         </reference>
         <reference name="content">
             <block type="gozolabs_advocado/adminhtml_login" name="advocado.login" template="gozolabs/advocado/login.phtml" />

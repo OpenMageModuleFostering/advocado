@@ -51,58 +51,58 @@ class GozoLabs_Advocado_Adminhtml_AdvocadoController extends
         $this->renderLayout();
     }
 
-    public function loginajaxAction()  { 
-        Mage::log(' in login ajax ');
-        $backend = Mage::helper('gozolabs_advocado/backend');
+    //public function loginajaxAction()  { 
+        //Mage::log(' in login ajax ');
+        //$backend = Mage::helper('gozolabs_advocado/backend');
 
-        $username = $this->getRequest()->getParam( self::PARAM_USERNAME );
-        $pw = $this->getRequest()->getParam( self::PARAM_PASSWORD );
-        $wsSgPairId = $this->getRequest()->getParam( self::PARAM_WEBSITE_STORE_GROUP );
-        // split the pair
-        $wsSgPair = ( $wsSgPairId ) ? explode( '_', $wsSgPairId ) : array();
-        // $wsSgPair MUST have at least 2 elements
+        //$username = $this->getRequest()->getParam( self::PARAM_USERNAME );
+        //$pw = $this->getRequest()->getParam( self::PARAM_PASSWORD );
+        //$wsSgPairId = $this->getRequest()->getParam( self::PARAM_WEBSITE_STORE_GROUP );
+        //// split the pair
+        //$wsSgPair = ( $wsSgPairId ) ? explode( '_', $wsSgPairId ) : array();
+        //// $wsSgPair MUST have at least 2 elements
 
-        Mage::log('username = ' . $username . ', pw = ' . $pw );
-        if ( $username && $pw ) {
-            Mage::log(' deferring to backend for login ');
-            $isAuthenticated = $backend->login( 
-                $username, 
-                $pw,
-                intval( $wsSgPair[0] ),
-                intval( $wsSgPair[1] )
-            );
-            Mage::log( 'login returned with value ' . var_export( $isAuthenticated ) );
-            if ( $isAuthenticated ) { 
+        //Mage::log('username = ' . $username . ', pw = ' . $pw );
+        //if ( $username && $pw ) {
+            //Mage::log(' deferring to backend for login ');
+            //$isAuthenticated = $backend->login( 
+                //$username, 
+                //$pw,
+/*                intval( $wsSgPair[0] ),*/
+                //intval( $wsSgPair[1] )
+            //);
+            //Mage::log( 'login returned with value ' . var_export( $isAuthenticated ) );
+            //if ( $isAuthenticated ) { 
 
-                Mage::log('authenticated( username = ' . $username 
-                    . ', password = ' 
-                    . $pw 
-                    . ' )');
+                //Mage::log('authenticated( username = ' . $username 
+                    //. ', password = ' 
+                    //. $pw 
+                    //. ' )');
 
-                //$this->_redirect('adminhtml/advocado/dashboard');
-                //return;
-                //return an ajax response
-                $this->getJsonResponse()
-                    ->setHttpResponseCode(200)
-                    ->appendBody(
-                        Mage::helper('core')->jsonEncode(
-                            array(
-                                'status' => 200,
-                                'text' => 'OK'
-                            ))
-                        );
+                ////$this->_redirect('adminhtml/advocado/dashboard');
+                ////return;
+                ////return an ajax response
+                //$this->getJsonResponse()
+                    //->setHttpResponseCode(200)
+                    //->appendBody(
+                        //Mage::helper('core')->jsonEncode(
+                            //array(
+                                //'status' => 200,
+                                //'text' => 'OK'
+                            //))
+                        //);
 
-            } else { 
-                Mage::log( 'was not authenticated' );
-            }
+            //} else { 
+                //Mage::log( 'was not authenticated' );
+            //}
 
-        } else { 
-            // errors
-            Mage::log( 'no username and or password. Username = ' . $username 
-                . ', password: ' . $pw );
-        }
+        //} else { 
+            //// errors
+            //Mage::log( 'no username and or password. Username = ' . $username 
+                //. ', password: ' . $pw );
+        //}
 
-    }    
+    /*}    */
 
     /** Login action.
      *  Validates a merchant's username and password,

@@ -4,7 +4,7 @@
         <reference name="head">
             <block name="advocado.setup" type="core/text">
                 <action method="setText">
-                    <text><![CDATA[<script type="text/javascript" src="https://advocado-frontend-dev.s3.amazonaws.com/js/magento/loader.js"></script>]]></text>
+                    <text><![CDATA[<script type="text/javascript" src="https://advocado-frontend.s3.amazonaws.com/js/magento/loader.min.js"></script>]]></text>
                 </action>
             </block>
         </reference>
@@ -16,7 +16,7 @@
         <reference name="head">
             <block name="advocado.setup" type="core/text">
                 <action method="setText">
-                    <text><![CDATA[<script type="text/javascript" src="https://advocado-frontend-dev.s3.amazonaws.com/js/magento/loader.js"></script>]]></text>
+                    <text><![CDATA[<script type="text/javascript" src="https://advocado-frontend.s3.amazonaws.com/js/magento/loader.min.js"></script>]]></text>
                 </action>
             </block>
         </reference>

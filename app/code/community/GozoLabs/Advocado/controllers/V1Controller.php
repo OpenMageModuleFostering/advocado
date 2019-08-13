@@ -83,6 +83,53 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
         return False;
     }
 
+    /* For creating an account with advocado.
+     */
+    public function registerAction() { 
+
+        Mage::log(' in registration ajax ');
+        $backend = Mage::helper('gozolabs_advocado/backend');
+        $username = $this->getRequest()->getParam( self::PARAM_USERNAME );
+        $pw = $this->getRequest()->getParam( self::PARAM_PASSWORD );
+        //$wsSgPairId = $this->getRequest()->getParam( self::PARAM_WEBSITE_STORE_GROUP );
+        // split the pair
+        //$wsSgPair = ( $wsSgPairId ) ? explode( '_', $wsSgPairId ) : array();
+        // $wsSgPair MUST have at least 2 elements
+
+        Mage::log('username = ' . $username . ', pw = ' . $pw );
+        if ( $username && $pw ) {
+            $returnedData = $backend->register($username, $pw);
+            Mage::log( 'registration returned with value ' . var_export( $returnedData, true ) );
+            if ( $returnedData && $returnedData['code'] == 200 ) { 
+
+                $this->getJsonResponse()
+                    ->setHttpResponseCode(200)
+                    ->appendBody(
+                        Mage::helper('core')->jsonEncode($returnedData)
+                    );
+
+            } else { 
+                Mage::log( 'was not registered (' . $returnedData['code'] . ')' );
+                $response = $this->getJsonResponse()
+                    ->setHttpResponseCode(403)
+                    ->appendBody(
+                        $this->jsonify(
+                            array('error_code'=>403, 'error_msg'=>$returnedData['error_msg']))
+                    );
+            }
+        } else { 
+            // errors
+            Mage::log( 'no username and or password. Username = ' . $username 
+                . ', password: ' . $pw );
+            $response = $this->getJsonResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody(
+                    $this->jsonify(array('error_code'=>400, 'error_msg'=>'Invalid parameters'))
+                );
+        }
+    }
+
+
     /** For logging in in the admin dashboard.
      */
     public function loginajaxAction()  { 
@@ -134,6 +181,15 @@ class GozoLabs_Advocado_V1Controller extends Mage_Core_Controller_Front_Action {
             // errors
             Mage::log( 'no username and or password. Username = ' . $username 
                 . ', password: ' . $pw );
+            $this->getJsonResponse()
+                ->setHttpResponseCode(400)
+                ->setBody(
+                    Mage::helper('core')->jsonEncode(
+                        array(
+                            'error_code' => 400,
+                            'error_msg' => 'Insufficient parameters passed.'
+                        ))
+                    );
         }
 
     }    

@@ -1103,6 +1103,36 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
     const SHARE_CODES_ST_CODE               = 'st_code';
     const SHARE_CODES_SHARES                = 'shares';
 
+    function getWebsite($websiteId) { 
+        $sites = Mage::app()->getWebsites();
+        foreach( $sites as $s ) { 
+            if ($s->getId() == $websiteId) { 
+                return $s;
+            }
+        }
+        return null;
+    }
+
+    function getSiteUrl($websiteId=1) { 
+        return Mage::helper('core/url')->getHomeUrl();
+    }
+
+    function getSiteName($websiteId=1) {
+        $site = $this->getWebsite($websiteId);
+        if ($site) { 
+            Mage::log('Store name is (not used) ' . $site->getDefaultStore()->getName());
+            return $site->getName();
+        } else { 
+            return '';
+        }
+        //return Mage::app()->getStore()->getName();
+    }
+
+    public function getCurrencyCode() { 
+        return Mage::app()->getStore()->getCurrentCurrencyCode();
+    }
+
+
     function getCurrentStoreGroupId() { 
         return Mage::app()->getStore()
             ->getGroupId();

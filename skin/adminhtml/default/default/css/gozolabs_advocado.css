@@ -1,10 +1,11 @@
 
 
-#advoc-login-container { 
-    display: block;
+#advoc-login-container, #advoc-register-container { 
+    /*display: block;*/
 }
 
-#advoc-login-container #status-container { 
+#advoc-login-container .status-container, 
+#advoc-register-container .status-container { 
     border: 1px solid rgb(109, 163, 88);
     border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -14,7 +15,8 @@
     font-size: 16px;
 }
 
-#advoc-login-container .center-form { 
+#advoc-login-container .center-form, 
+#advoc-register-container .center-form { 
     width: 350px;
     display: block;
     padding: 24px 24px;
@@ -24,7 +26,8 @@
     color: rgb(133, 133, 133);
 }
 
-#advoc-login-container .center-form .advocado-logo { 
+#advoc-login-container .center-form .advocado-logo,
+#advoc-register-container .center-form .advocado-logo { 
     width: 183px;
     height: 50px;
     background-image: url(http://getadvocado.com/img/global/logo.png);
@@ -33,13 +36,14 @@
     padding: 0;
 }
 
-#advoc-login-container .center-form label { 
+#advoc-login-container .center-form label, 
+#advoc-register-container .center-form label { 
     color: rgb(133, 133, 133);
     display: block;
     margin-top: 8px;
 }
 
-#advoc-login-form { 
+#advoc-login-form, #advoc-registration-form { 
     display: block;
     padding: 24px 24px;
     font-size: 18px;
@@ -47,7 +51,9 @@
 }
 
 #advoc-login-form input[type=text],
-#advoc-login-form input[type=password] { 
+#advoc-login-form input[type=password], 
+#advoc-registration-form input[type=text], 
+#advoc-registration-form input[type=password]{ 
 
     height: 22px;
     font-size: 18px;
@@ -56,7 +62,8 @@
 
 }
 
-#advoc-login-form input[type=submit] { 
+#advoc-login-form input[type=submit], 
+#advoc-registration-form input[type=submit]{ 
     display: block;
     margin-top: 8px;
     width: 80px;
@@ -64,6 +71,10 @@
     background-color: rgb(67, 182, 67);
     font-size: 18px;
     color: white;
+}
+
+#advoc-registration-form input[type=submit] { 
+    width: 200px;
 }
 
 select#advoc-website-store-group { 
@@ -76,13 +87,64 @@ select#advoc-website-store-group {
     margin-top: 16px;
 }
 
-#status-container .connect-status { 
-    text-align: center;
+.status-container .connect-status { 
     color: orange;
+    padding: 10px 12px;
 }
 
-#status-container .status-message { 
+.status-container .status-message { 
     text-align: center;
 }
 
+.advoc-errors { 
+    background-color: #F2D9EB;
+    border: 1px solid #EECDD9;
+    padding: 10px 12px;
+    color: rgb(179, 23, 23);
+}
 
+ul.no-bullet{ 
+    list-style-type: none;
+}
+
+ul.no-bullet.small-text { 
+    font-size: 13px;
+}
+
+ul.flat li {
+    float: left;
+    padding-right: 12px;
+}
+
+.lrpadded20 { 
+    padding: 0 20px;
+}
+
+.content-centered { 
+    text-align: center;
+}
+
+.offset-top { 
+    margin-top: 20px;
+}
+
+.hide { 
+    display: none;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+}
+
+.clearfix:after {
+    clear: both;
+}
