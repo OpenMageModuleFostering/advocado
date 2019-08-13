@@ -514,19 +514,19 @@ class AdvocPVariant extends AdvocModelInstance {
         $stockItem = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
         //$stockItem = $o->getStockItem();
         $manageInventory = 'magento';
-        Mage::log('Getting inventory management details');
+        //Mage::log('Getting inventory management details');
         if ($stockItem && $stockItem->getId()) {
             $useConfig = $stockItem->getData('use_config_manage_stock');
             if ($useConfig)  {
-                Mage::log('Uses config = ' . $useConfig);
+                //Mage::log('Uses config = ' . $useConfig);
                 $config = Mage::getStoreConfig('cataloginventory/item_options/manage_stock');
                 if ($config != '1') { 
                     $manageInventory = null;
                 } else { 
-                    Mage::log('Config says manage stock');
+                    //Mage::log('Config says manage stock');
                 }
             } else { 
-                Mage::log('Doesnt use config');
+                //Mage::log('Doesnt use config');
                 $stockItemManageInventory = $stockItem->getData('manage_stock');
                 if ($stockItemManageInventory == 0) { 
                     $manageInventory = null;
@@ -1313,7 +1313,6 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                 ->setStoreId($this->getWebsite()->getDefaultStore()->getStoreId());
             // lazy collection, needs to load stuff, so we call count
             // this is really weird.
-            Mage::log('Number of products = ' . $_collect->count());
 
             // version 1 of the join - doesn't work
             //$_collect->getSelect()
@@ -1342,6 +1341,7 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
                     //)
                 //)
             //);
+            //Mage::log('Number of products = ' . $_collect->count());
             $collect = new AdvocCustomProductCollection($_collect);
 
             if (is_array( $filters ) && count( $filters ) > 0 ) {
@@ -1611,3 +1611,12 @@ class GozoLabs_Advocado_Helper_Data extends Mage_Core_Helper_Data {
 }
 
 ?>
+<?php
+
+/*
+ * ==================================================
+ * Utilities
+ * ==================================================
+ */
+
+

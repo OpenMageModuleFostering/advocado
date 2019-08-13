@@ -1,6 +1,7 @@
-if(jQuery) { 
-    jQuery.noConflict();
-}
+
+// give $ back
+var jQuery_A = jQuery.noConflict();
+
 var advocado = (function($, A) { 
 
     var POPUP_TITLE = 'Create a new Advocado account',
@@ -298,9 +299,9 @@ var advocado = (function($, A) {
 
     return A;
 
-})(jQuery, advocado || {});
+})(jQuery_A, advocado || {});
 
-jQuery(document).ready(function() {
+jQuery_A(document).ready(function() {
     advocado.createAccountEvents();
     advocado.loginFormEvents();
 });
